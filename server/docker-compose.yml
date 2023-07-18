@@ -1,0 +1,82 @@
+version: '3.8'
+
+services:
+  zookeeper:
+    container_name: zookeeper
+    image: wurstmeister/zookeeper
+    networks:
+      - app-network
+    ports:
+      - 2181:2181
+    environment:
+      - ZOOKEEPER_CLIENT_PORT=2181
+      - ZOOKEEPER_TICK_TIME=2000
+      - ALLOW_ANONYMOUS_LOGIN=yes
+    restart: unless-stopped
+    volumes:
+      - zookeeper-data:/var/lib/zookeeper
+
+  kafka:
+    image: wurstmeister/kafka
+    container_name: kafka
+    links:
+      - zookeeper
+    networks:
+      - app-network
+    ports:
+      - 9092:9092
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_ADVERTISED_HOST_NAME=kafka
+      - KAFKA_DELETE_TOPIC_ENABLE=true
+      - KAFKA_AUTO_CREATE_TOPICS_ENABLE=true
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+      - KAFKA_ADVERTISED_PORT=9092
+    depends_on:
+      - zookeeper
+    restart: unless-stopped
+    volumes:
+      - kafka-data:/var/lib/kafka
+
+  mysql:
+    image: mysql:latest
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_PASSWORD: root
+      MYSQL_DATABASE: jobsDB
+    restart: unless-stopped
+    networks:
+      - app-network
+    ports:
+      - 3306:3306
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  api:
+    build:
+      context: .
+      dockerfile: ./dev.Dockerfile
+    volumes:
+      - ./:/srv/app
+    depends_on:
+      - mysql
+      - kafka
+      - zookeeper
+    ports:
+      - '3001:3001'
+    networks:
+      - app-network
+
+volumes:
+  zookeeper-data:
+  kafka-data:
+  mysql-data:
+
+networks:
+  app-network:
+    name: app-network
+    driver: bridge
