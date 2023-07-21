@@ -9,6 +9,9 @@ const App = (): JSX.Element => {
   const [jobs, setJobs] = useState<IJob[]>([]);
   const [socket, setSocket] = useState<Socket>();
 
+  /**
+   * Call GET request to fetch all the jobs from the server
+   */
   useEffect(() => {
     const fetchJobs = async () => {
       const response = await axios.get("http://localhost:3001/jobs");
@@ -17,6 +20,10 @@ const App = (): JSX.Element => {
     fetchJobs();
   }, []);
 
+  /**
+   * Initialize a connection with Socket.io
+   * Retrieve jobs from Socket.io on JobUpdate event
+   */
   useEffect(() => {
     const newSocket = io("http://localhost:8000");
     setSocket(newSocket);
@@ -37,6 +44,9 @@ const App = (): JSX.Element => {
     };
   }, []);
 
+  /**
+   * Call POST request to send number of emails to the server
+   */
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
 

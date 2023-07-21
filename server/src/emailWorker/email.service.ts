@@ -5,6 +5,9 @@ import * as nodemailer from 'nodemailer';
 export class EmailService {
   private transporter: nodemailer.Transporter;
 
+  /**
+   * Initialize the email service with credentials
+   */
   constructor() {
     this.transporter = nodemailer.createTransport({
       host: 'server.com',
@@ -17,6 +20,9 @@ export class EmailService {
     });
   }
 
+  /**
+   * Method to send emails to the specific user
+   */
   async sendEmail(to: string, subject: string, text: string) {
     const mailOptions = {
       from: '"Sender Name" <sender@example.com>',

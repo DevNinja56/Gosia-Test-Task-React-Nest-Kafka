@@ -1,5 +1,8 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
+/**
+ * Define schema for a Job
+ */
 @Entity()
 export class Job {
   @PrimaryGeneratedColumn()

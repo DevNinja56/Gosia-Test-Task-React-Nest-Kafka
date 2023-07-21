@@ -3,6 +3,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { JobsModule } from './jobs/jobs.module';
 import { Job } from './jobs/job.entity';
 
+/**
+ * Initialize the mySQL database connection with the server
+ */
 @Module({
   imports: [
     TypeOrmModule.forRoot({
