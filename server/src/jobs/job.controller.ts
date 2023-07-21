@@ -11,8 +11,8 @@ export class JobsController {
     return { jobId };
   }
 
-  @Get('')
+  @Get()
   async getJobs() {
-    return this.jobsService.findJobs();
+    return this.jobsService.getAllJobs();
   }
 }

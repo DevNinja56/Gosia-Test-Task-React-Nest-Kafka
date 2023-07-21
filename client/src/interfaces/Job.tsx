@@ -1,4 +1,5 @@
 export interface IJob {
   id: number;
-  status: string;
+  jobId: string;
+  count: string;
 }

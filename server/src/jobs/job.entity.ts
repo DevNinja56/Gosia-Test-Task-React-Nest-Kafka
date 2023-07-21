@@ -8,9 +8,6 @@ export class Job {
   @Column({ length: 500 })
   jobId: string;
 
-  @Column('text')
-  status: string;
-
   @Column('int')
   count: number;
 }

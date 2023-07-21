@@ -1,10 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { JobsController } from './jobs/job.controller';
-import { JobsService } from './jobs/jobs.service';
-import { KafkaService } from './kafka/kafka.service';
+import { JobsModule } from './jobs/jobs.module';
 import { Job } from './jobs/job.entity';
-import { JobRepository } from './jobs/job.repository';
 
 @Module({
   imports: [
@@ -18,9 +15,7 @@ import { JobRepository } from './jobs/job.repository';
       entities: [Job],
       synchronize: true,
     }),
-    TypeOrmModule.forFeature([JobRepository]),
+    JobsModule,
   ],
-  controllers: [JobsController],
-  providers: [JobsService, KafkaService],
 })
 export class AppModule {}

@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   zookeeper:
@@ -56,18 +56,34 @@ services:
     volumes:
       - mysql-data:/var/lib/mysql
 
-  api:
+  server:
     build:
-      context: .
-      dockerfile: ./dev.Dockerfile
+      context: ./server
+      dockerfile: Dockerfile
     volumes:
-      - ./:/srv/app
+      - ./:/app/server
     depends_on:
       - mysql
       - kafka
       - zookeeper
+    restart: unless-stopped
     ports:
-      - '3001:3001'
+      - "3001:3001"
+      - "8000:8000"
+    networks:
+      - app-network
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    volumes:
+      - ./:/app/client
+    depends_on:
+      - server
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
     networks:
       - app-network
 
